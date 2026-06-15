@@ -11,16 +11,20 @@ O projeto apresenta informacoes sobre o laboratorio, sua historia, oportunidades
 - JavaScript
 - Bootstrap 5
 - Bibliotecas front-end em `assets/vendor`
-- PHP simples para servir a pagina inicial e suportar endpoints de formulario
 
 ## Estrutura do projeto
 
-- `index.html`: pagina principal do site
-- `index.php`: entrada alternativa que serve o conteudo de `index.html`
-- `students-life.html`: pagina "Manual do Aluno"
-- `news.html`: pagina institucional do CAEd
+O site usa URLs limpas (sem `.html`): cada pagina fica em uma pasta com seu `index.html`,
+servido pelo GitHub Pages como `/pasta/`.
+
+- `index.html`: pagina inicial (`/`)
+- `manual-do-aluno/index.html`: pagina "Manual do Aluno" (`/manual-do-aluno/`)
+- `caed/index.html`: pagina institucional do CAEd (`/caed/`)
+- `orientadores/index.html`: lista de orientadores (`/orientadores/`)
+- `orientador/index.html`: perfil individual do orientador (`/orientador/?id=...`)
+- `404.html`: pagina de erro do GitHub Pages (usa caminhos absolutos)
 - `assets/`: imagens, estilos, scripts e bibliotecas de terceiros
-- `forms/contact.php`: endpoint PHP para envio de formulario
+  - `assets/data/orientadores.json`: dados dos orientadores (carregados por `assets/js/orientadores.js`)
 
 ## Como clonar o projeto
 
@@ -40,37 +44,27 @@ cd labes-website
 
 ## Como executar o projeto
 
-
-### Opcao recomendada: servidor PHP embutido
-
-Use esta opcao se voce quiser acessar a raiz do projeto por `index.php`.
-
-```bash
-php -S localhost:8000
-```
-
-Depois, abra no navegador:
-
-```text
-http://localhost:8000
-```
-
-### Alternativa: servidor estatico com Python
-
-Se o objetivo for apenas visualizar o front-end, voce pode usar um servidor estatico:
+O site e totalmente estatico. Sirva a partir da **raiz do repositorio** para que as URLs
+limpas (`/manual-do-aluno/`, `/caed/`, etc.) funcionem como no GitHub Pages:
 
 ```bash
 python -m http.server 8000
 ```
 
-Depois, abra:
+Depois, abra no navegador:
 
 ```text
-http://localhost:8000/index.html
+http://localhost:8000/
 ```
+
+E navegue por `http://localhost:8000/manual-do-aluno/`, `/caed/`, `/orientadores/`.
+
+> Abrir os arquivos diretamente pelo navegador (`file://`) nao funciona bem: o
+> carregamento dos orientadores depende de `fetch` e exige um servidor HTTP.
 
 ## Observacoes importantes
 
-- O site pode ser aberto diretamente pelo navegador, mas usar um servidor local evita problemas com caminhos relativos e facilita os testes.
-- O formulario em `forms/contact.php` depende da biblioteca `assets/vendor/php-email-form/php-email-form.php`, que nao esta presente neste repositorio. Sem essa biblioteca e sem configurar um endereco de e-mail real, o envio de mensagens nao funcionara.
-- Parte do conteudo original do template ainda existe em paginas auxiliares. Antes de publicar novas alteracoes, vale revisar titulos, textos e metadados que ainda mencionam o template original.
+- As paginas em pastas usam caminhos relativos `../assets/...`; a `index.html` (raiz) usa
+  `assets/...`. Mantenha esse padrao ao criar novas paginas em pastas.
+- O `assets/js/orientadores.js` so e carregado pelas paginas `/orientadores/` e
+  `/orientador/` (ambas em pasta), por isso assume profundidade 1 (`../`).

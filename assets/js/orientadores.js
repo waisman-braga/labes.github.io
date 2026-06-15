@@ -1,13 +1,16 @@
 (function() {
   "use strict";
 
-  const DATA_URL = "assets/data/orientadores.json";
+  // Este script s\u00f3 \u00e9 carregado pelas p\u00e1ginas /orientadores/ e /orientador/,
+  // ambas em pastas (profundidade 1), por isso os caminhos usam "../".
+  const ASSET_PREFIX = "../";
+  const DATA_URL = ASSET_PREFIX + "assets/data/orientadores.json";
   const EMPTY_PROFILE_MESSAGE = "Nenhuma informa\u00e7\u00e3o complementar cadastrada.";
   const RESEARCH_SUBLINE_PREFIX = "-- ";
   const ACTION_ICON_PATHS = {
-    email: "assets/img/icons/logo-email.png",
-    site: "assets/img/icons/logo-site.png",
-    lattes: "assets/img/icons/logo-curriculo.png"
+    email: ASSET_PREFIX + "assets/img/icons/logo-email.png",
+    site: ASSET_PREFIX + "assets/img/icons/logo-site.png",
+    lattes: ASSET_PREFIX + "assets/img/icons/logo-curriculo.png"
   };
 
   function hasValue(value) {
@@ -58,8 +61,12 @@
       return wrapper;
     }
 
+    // O JSON guarda o caminho relativo "assets/..."; como esta página fica em
+    // uma pasta (profundidade 1), normalizamos para "../assets/...".
+    const fotoSrc = /^assets\//.test(foto) ? ASSET_PREFIX + foto : foto;
+
     const image = document.createElement("img");
-    image.src = foto;
+    image.src = fotoSrc;
     image.alt = `Foto de ${normalizedText(orientador.nome)}`;
     image.loading = "lazy";
 
@@ -72,7 +79,7 @@
   }
 
   function profileUrl(orientador) {
-    return `orientador.html?id=${encodeURIComponent(normalizedText(orientador.id))}`;
+    return `../orientador/?id=${encodeURIComponent(normalizedText(orientador.id))}`;
   }
 
   function emailUrl(email) {
@@ -448,7 +455,7 @@
     profile.appendChild(details);
 
     const backLink = createElement("a", "orientador-back-link", "Voltar para orientadores");
-    backLink.href = "orientadores.html";
+    backLink.href = "../orientadores/";
     backLink.prepend(createElement("i", "bi bi-arrow-left-short"));
     profile.appendChild(backLink);
   }
